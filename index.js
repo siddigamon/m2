@@ -19,10 +19,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/departments", (req, res) => {
-    const q = `SELECT m2.departments.dept_name, m2.designation.designation_name
-    FROM 
-    m2.departments
-   INNER JOIN m2.designation on m2.departments.departments_id = m2.designation.departments_id`
+    const q = `SELECT * FROM m2.departments;`
     db.query(q, (err, data) => {
         if (err) return res.json(err)
         return res.json(data)
