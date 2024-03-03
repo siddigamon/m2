@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const DepartmentView = () => {
     const [employees, setEmployees] = useState([]);
-    const [search, setSearch] = useState('');
+    const [departments, setDepartments] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState('');
+
+    useEffect(() => {
+        fetchDepartments();
+    }, []);
+
+    const fetchDepartments = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8800/departments`);
+            setDepartments(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const fetchEmployeesByDepartment = async (dept_name) => {
         try {
@@ -15,13 +29,17 @@ const DepartmentView = () => {
     };
 
     const handleSearch = () => {
-        fetchEmployeesByDepartment(search);
+        fetchEmployeesByDepartment(selectedDepartment);
     };
 
     return (
         <div>
             <h1>Employees by Department</h1>
-            <input type="text" value={search} onChange={e => setSearch(e.target.value)} />
+            <select value={selectedDepartment} onChange={e => setSelectedDepartment(e.target.value)}>
+                {departments.map((department, index) => (
+                    <option key={index} value={department.dept_name}>{department.dept_name}</option>
+                ))}
+            </select>
             <button onClick={handleSearch}>Search</button>
             <table>
                 <thead>
