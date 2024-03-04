@@ -58,7 +58,7 @@ app.get("/employees/:id", (req, res) => {
 
 
 
-app.get("/employees/view/:dept_name", (req, res) => {
+app.get("/employees/view/:dept_name", (req, res) => { // trying employee type
     const q = `
     SELECT 	
         m2.employees.employee_id,	
@@ -66,7 +66,8 @@ app.get("/employees/view/:dept_name", (req, res) => {
         m2.employees.lastname,
         m2.employees.firstname,
         m2.designation.designation_name,
-        m2.status.status_name
+        m2.status.status_name,
+        m2.assign_designation.employee_type
     FROM 
     m2.assign_designation
     INNER JOIN 
@@ -127,12 +128,14 @@ app.post("/employees", (req, res) => {
     })
 })
 
-app.post("/assign_designation", (req, res) => {
-    const q = "INSERT INTO m2.assign_designation (employee_id, designation_id, status_id) VALUES (?)"
+app.post("/assign_designation", (req, res) => { // trying employee type
+    const q = "INSERT INTO m2.assign_designation (employee_id, designation_id, status_id, employee_type) VALUES (?)"
     const values = [
         req.body.employee_id,
         req.body.designation_id,
-        req.body.status_id
+        req.body.status_id,
+        req.body.employee_type
+
     ]
 
     db.query(q, [values], (err, data) => {
@@ -141,12 +144,14 @@ app.post("/assign_designation", (req, res) => {
     })
 })
 
-app.post("/assign_designation-update", (req, res) => {
-    const q = "UPDATE m2.assign_designation SET designation_id = ?, status_id = ? WHERE employee_id = ?"
+app.post("/assign_designation-update", (req, res) => { // trying employee type
+    const q = "UPDATE m2.assign_designation SET designation_id = ?, status_id = ?, employee_type = ? WHERE employee_id = ?"
     const values = [
         req.body.designation_id,
         req.body.status_id,
+        req.body.employee_type,
         req.body.employee_id
+
     ]
 
     db.query(q, values, (err, data) => {
